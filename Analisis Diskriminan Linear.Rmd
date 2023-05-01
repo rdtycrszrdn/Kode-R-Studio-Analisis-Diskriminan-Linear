@@ -1,0 +1,34 @@
+---
+title: "Analisis Diskriminan Linear"
+author: "Arditya Criszardin"
+date: "2023-05-01"
+output: html_document
+---
+
+```{r}
+# Memasang paket "MASS" jika belum terpasang
+# install.packages("MASS")
+
+# Memuat data
+my_data <- read.csv("my_data.csv")
+
+# Memisahkan data menjadi data pelatihan dan data uji
+library(caret)
+set.seed(123)
+train_index <- createDataPartition(my_data$target, p = 0.7, list = FALSE)
+train_data <- my_data[train_index, ]
+test_data <- my_data[-train_index, ]
+
+# Melakukan Analisis Diskriminan Linear dengan menggunakan paket "MASS"
+library(MASS)
+my_lda <- lda(target ~ ., data = train_data)
+
+# Menampilkan hasil Analisis Diskriminan Linear
+summary(my_lda)
+
+# Memprediksi nilai target menggunakan model yang telah dibuat
+pred_lda <- predict(my_lda, newdata = test_data[,-1])
+confusionMatrix(pred_lda$class, test_data$target)
+
+```
+
